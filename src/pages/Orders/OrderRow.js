@@ -1,22 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-const OrderRow = ({ order }) => {
-  const { serviceName, customer, phone, price, email } = order;
+const OrderRow = ({ order, handleDelete, handleStatusUpdate }) => {
+  const { serviceName, customer, phone, price, service, _id, status } = order;
+
+  const [orderService, setOrderService] = useState({});
+  useEffect(() => {
+    fetch(`http://localhost:5000/services/${service}`)
+      .then((res) => res.json())
+      .then((data) => setOrderService(data));
+  }, [service]);
+
   return (
     <tr>
       <th>
         <label>
-          <input type="checkbox" className="checkbox" />
+          <button onClick={() => handleDelete(_id)} className="btn btn-ghost">
+            X
+          </button>
         </label>
       </th>
       <td>
         <div className="flex items-center space-x-3">
           <div className="avatar">
-            <div className="mask mask-squircle w-12 h-12">
-              <img
-                src="/tailwind-css-component-profile-2@56w.png"
-                alt="Avatar Tailwind CSS Component"
-              />
+            <div className="rounded w-24 h-24">
+              {orderService?.img && (
+                <img
+                  src={orderService.img}
+                  alt="Avatar Tailwind CSS Component"
+                />
+              )}
             </div>
           </div>
           <div>
@@ -26,15 +38,18 @@ const OrderRow = ({ order }) => {
         </div>
       </td>
       <td>
-        Zemlak, Daniel and Leannon
+        {serviceName}
         <br />
-        <span className="badge badge-ghost badge-sm">
-          Desktop Support Technician
-        </span>
+        <span className="badge badge-ghost badge-sm">${price}</span>
       </td>
       <td>Purple</td>
       <th>
-        <button className="btn btn-ghost btn-xs">details</button>
+        <button
+          onClick={() => handleStatusUpdate(_id)}
+          className="btn btn-ghost btn-xs"
+        >
+          {status ? status : "pending"}
+        </button>
       </th>
     </tr>
   );
