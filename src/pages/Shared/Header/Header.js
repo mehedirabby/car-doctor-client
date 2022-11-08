@@ -4,7 +4,10 @@ import logo from "../../../assets/logo.svg";
 import { AuthContext } from "../../../Context/UserContext/UserContext";
 
 const Header = () => {
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
+  const handleLogout = () => {
+    logout().then().catch();
+  };
   const menuItems = (
     <>
       <li>
@@ -15,6 +18,11 @@ const Header = () => {
           <>
             <Link className="font-semibold" to="/orders">
               Orders
+            </Link>
+            <Link className="font-semibold" to="/orders">
+              <div onClick={handleLogout} className="btn btn-ghost">
+                sign out
+              </div>
             </Link>
           </>
         ) : (
